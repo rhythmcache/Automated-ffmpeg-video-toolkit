@@ -31,5 +31,5 @@ Works on Termux and Linux.
 
 - Screenshot 2
 
-![screenshot2](screenshots/image2.png)
+![screenshot2](screenshots/image.png)
 
