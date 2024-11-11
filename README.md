@@ -21,9 +21,6 @@ Works on Termux and Linux.
 - ZIP (if you want to create bootanimation)
 
 ## Some Screenshots
-- Screenshot 1
-![screenshot1](screenshots/image1.png)
 
-- Screenshot 2
-  
-![screenshot2](screenshots/image.png)
+- Screenshot 1: [image1.png](screenshots/image1.png)
+- Screenshot 2: [image.png](screenshots/image.png)
