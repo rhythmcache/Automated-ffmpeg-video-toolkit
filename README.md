@@ -43,6 +43,6 @@ Works on Termux and Linux.
 
 - Screenshot 4
 
-![screenshot3](screenshots/image3.png)
+![screenshot4](screenshots/image4.png)
 
 
