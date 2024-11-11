@@ -46,3 +46,9 @@ Works on Termux and Linux.
 ![screenshot4](screenshots/image4.png)
 
 
+
+## How To Use
+
+- [Download The Script Directly](https://github.com/rhythmcache/Automated-ffmpeg-video-toolkit/releases/download/v1/automatedffmpeg.sh)  and run it in terminal.
+
+- Or just copy and paste this in Linux Terminal or Termux
