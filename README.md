@@ -22,5 +22,14 @@ Works on Termux and Linux.
 
 ## Some Screenshots
 
-- Screenshot 1: [image1.png](screenshots/image1.png)
-- Screenshot 2: [image.png](screenshots/image.png)
+- Screenshot 1
+
+![screenshot1](screenshots/image1.png)
+
+
+<br><br>
+
+- Screenshot 2
+
+![screenshot2](screenshots/image2.png)
+
