@@ -1,5 +1,6 @@
 # Automated-ffmpeg-video-toolkit
-Powerful shell script to simplify common FFMPEG related video editing tasks
+Powerful shell script to simplify common FFMPEG related video editing tasks. 
+Works on Termux and Linux.
 
 ## Features
 - Convert videos between different formats
@@ -14,3 +15,7 @@ Powerful shell script to simplify common FFMPEG related video editing tasks
 - Create custom Android bootanimations
 - Extract and embed subtitles
 - And much more...
+ ## Prerequisites
+
+- FFmpeg should be installed on ypur distro
+- ZIP (if you want to create bootanimation)
