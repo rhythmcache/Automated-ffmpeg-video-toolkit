@@ -33,3 +33,16 @@ Works on Termux and Linux.
 
 ![screenshot2](screenshots/image.png)
 
+<br><br>
+
+- Screenshot 3
+
+![screenshot3](screenshots/image3.png)
+
+<br><br>
+
+- Screenshot 4
+
+![screenshot3](screenshots/image3.png)
+
+
