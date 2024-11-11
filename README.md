@@ -19,3 +19,8 @@ Works on Termux and Linux.
 
 - FFmpeg
 - ZIP (if you want to create bootanimation)
+
+## Some Screenshots
+### Main Interface
+![screenshot1](screenshots/image1.png)
+  
