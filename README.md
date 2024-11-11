@@ -63,7 +63,7 @@ chmod +x ./automatedffmpeg.sh
 
 
 
-#Questions or Bugs ?
+#Questions or Found Bugs ?
 [ask here](https://t.me/ximistuffschat)
 
 
