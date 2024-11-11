@@ -17,5 +17,5 @@ Works on Termux and Linux.
 - And much more...
  ## Prerequisites
 
-- FFmpeg should be installed on ypur distro
+- FFmpeg
 - ZIP (if you want to create bootanimation)
