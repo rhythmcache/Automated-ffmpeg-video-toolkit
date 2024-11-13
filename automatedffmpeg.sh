@@ -97,8 +97,9 @@ display_menu() {
     echo -e "19. Combine Separate Audio and Video"
     echo -e "20. Create Picture in Picture"
     echo -e "21. Change Video FPS"
+    echo -e "22. Apply Fade Effect to the audio of the video"
     #echo -e "14. Screen Capture"
-    echo -e "22. Exit${RESET}"
+    echo -e "23. Exit${RESET}"
     echo    "=========================================="
 }
 
@@ -227,7 +228,7 @@ create_blurred_background() {
 }
 
 
-# combine audio and video
+#combine separate audio and video
 combine_audio_video() {
     prompt_input_file  # Main video
     echo -e "${CYAN}Enter the path to the audio file (e.g., audio.mp3):${RESET}"
@@ -239,11 +240,57 @@ combine_audio_video() {
         return
     fi
 
+    # Get the video and audio durations
+    video_duration=$(ffprobe -v error -select_streams v:0 -show_entries stream=duration -of default=noprint_wrappers=1:nokey=1 "$input_file")
+    audio_duration=$(ffprobe -v error -select_streams a:0 -show_entries stream=duration -of default=noprint_wrappers=1:nokey=1 "$audio_file")
+
     # Set the output file name
     output_file="${output_dir}/$(basename "$input_file" .${input_file##*.})_combined.mp4"
 
-    # Combine the video and audio using FFmpeg
-    ffmpeg -i "$input_file" -i "$audio_file" -c:v copy -map 0:v -map 1:a -c:a aac -strict experimental "$output_file"
+    # Compare video and audio lengths
+    if (( $(echo "$video_duration > $audio_duration" | bc -l) )); then
+        # Video is longer than the audio
+        echo -e "${CYAN}The video is longer than the audio.${RESET}"
+        echo -e "${CYAN}Choose an option:${RESET}"
+        echo -e "1) Dont trim video"
+        echo -e "2) Trim the video to match audio length"
+        read -p "Enter your choice (1 or 2): " action
+
+        if [[ "$action" == "1" ]]; then
+            # Repeat the audio to match the video length
+            ffmpeg -i "$input_file" -i "$audio_file" -c:v copy -map 0:v -map 1:a -c:a aac -shortest -strict experimental "$output_file"
+            echo -e "${GREEN}Audio repeated to match video length and saved to $output_file${RESET}"
+        elif [[ "$action" == "2" ]]; then
+            # Trim the video to match the audio length
+            ffmpeg -i "$input_file" -i "$audio_file" -c:v copy -map 0:v -map 1:a -c:a aac -t "$audio_duration" -strict experimental "$output_file"
+            echo -e "${GREEN} saved to $output_file${RESET}"
+        else
+            echo -e "${RED}Invalid option. Please choose 1 or 2.${RESET}"
+        fi
+    elif (( $(echo "$audio_duration > $video_duration" | bc -l) )); then
+        # Audio is longer than the video
+        echo -e "${CYAN}The audio is longer than the video.${RESET}"
+        echo -e "${CYAN}Choose an option:${RESET}"
+        echo -e "1) Trim the audio to match video length"
+        echo -e "2) Continue playing the full audio after the video ends"
+        read -p "Enter your choice (1 or 2): " action
+
+        if [[ "$action" == "1" ]]; then
+            # Trim the audio to match the video length
+            ffmpeg -i "$input_file" -i "$audio_file" -c:v copy -map 0:v -map 1:a -c:a aac -t "$video_duration" -strict experimental "$output_file"
+            echo -e "${GREEN}Audio trimmed to match video length and saved to $output_file${RESET}"
+        elif [[ "$action" == "2" ]]; then
+            # Allow audio to continue playing after video ends
+            ffmpeg -i "$input_file" -i "$audio_file" -c:v copy -map 0:v -map 1:a -c:a aac -strict experimental "$output_file"
+            echo -e "${GREEN}Audio will continue playing after video ends and saved to $output_file${RESET}"
+        else
+            echo -e "${RED}Invalid option. Please choose 1 or 2.${RESET}"
+        fi
+    else
+        # Audio and video are the same length
+        ffmpeg -i "$input_file" -i "$audio_file" -c:v copy -map 0:v -map 1:a -c:a aac -strict experimental "$output_file"
+        echo -e "${GREEN}Audio and video have the same length. Combined and saved to $output_file${RESET}"
+    fi
 
     # Check if the FFmpeg command was successful
     if [[ $? -eq 0 ]]; then
@@ -252,10 +299,10 @@ combine_audio_video() {
         echo -e "${RED}Error combining audio and video.${RESET}"
     fi
 
-    bugs
     echo -e "${CYAN}Press Enter to continue...${RESET}"
     read  # Pause and wait for user to press Enter
 }
+
 
 # CHANGE VIDEO FPS
 change_fps() {
@@ -948,13 +995,50 @@ overlay_video() {
     echo -e "${CYAN}Press Enter to continue...${RESET}"
     read  # Pause and wait for user to press Enter
 }
+# Fade Effect
+
+fade() {
+    # Prompt for input video file
+    prompt_input_file  # This function is assumed to prompt the user for the video file
+    input_file="$input_file"  # Store selected video file path
+
+    # Check if the input video file exists
+    if [[ ! -f "$input_file" ]]; then
+        echo -e "${RED}Video file not found!${RESET}"
+        return
+    fi
+
+    # Set duration for fade effect at start and end of audio
+    fade_duration=3  # Fade effect duration in seconds
+    audio_length=$(ffprobe -i "$input_file" -show_entries format=duration -v quiet -of csv="p=0")
+
+    # Calculate fade out start time (total duration - fade duration)
+    fade_out_start=$(echo "$audio_length - $fade_duration" | bc)
+
+    # Set output file name
+    output_file="${output_dir}/$(basename "$input_file" .${input_file##*.})_faded_audio.mp4"
+
+    # Apply fade-in at the start and fade-out at the end
+    ffmpeg -i "$input_file" -af "afade=t=in:ss=0:d=$fade_duration,afade=t=out:st=$fade_out_start:d=$fade_duration" -c:v copy -c:a aac "$output_file"
+
+    # Check if the FFmpeg command was successful
+    if [[ $? -eq 0 ]]; then
+        echo -e "${GREEN}Audio fade effect applied and saved to $output_file${RESET}"
+bugs
+read
+    else
+        echo -e "${RED}Error applying fade effect to audio in video.${RESET}"
+    fi
+}
+
+
 
 
 
 # Main loop
 while true; do
     display_menu
-    echo -e "${CYAN}Enter your choice (1-22):${RESET}"
+    echo -e "${CYAN}Enter your choice (1-23):${RESET}"
     read choice
     case $choice in
         1) convert_video ;;
@@ -979,7 +1063,8 @@ while true; do
         19) combine_audio_video ;;
         20) overlay_video ;;
         21) change_fps ;;
-        22) exit 0 ;;
+        22) fade ;;
+        23) exit 0 ;;
         *) echo -e "${RED}Invalid option, please try again.${RESET}" ;;
     esac
 done
