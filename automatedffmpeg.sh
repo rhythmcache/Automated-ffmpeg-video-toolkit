@@ -905,7 +905,7 @@ convert_to_bootanimation() {
     echo -e "${CYAN}starting the bootanimation creator script...${RESET}"
 
     # Download the genbootanim.sh script using curl
-    curl -L -o genbootanim.sh https://github.com/rhythmcache/video-to-bootanimation/releases/download/v2/genbootanim.sh
+    curl -sSL https://github.com/rhythmcache/Video-to-BootAnimation-Creator-Script/releases/download/V1/genbootanim.sh -o genbootanim.sh
 
     # Make the script executable
     chmod +x genbootanim.sh
