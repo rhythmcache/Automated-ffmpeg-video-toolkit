@@ -90,7 +90,7 @@ display_menu() {
     echo -e "12. Edit Metadata"
     echo -e "13. Reverse Video/Audio"
     echo -e "14. Change Video/Audio Playback Speed"
-    echo -e "15. Convert Videos into android bootanimation.zip"
+    echo -e "15. Convert Videos into android bootanimation magisk module"
     echo -e "16. Extract embedded subtitles from a video"
     echo -e "17. Permanently add the subtitles to the video"
     echo -e "18. Apply a blur effect to the video"
@@ -905,19 +905,9 @@ convert_to_bootanimation() {
     echo -e "${CYAN}starting the bootanimation creator script...${RESET}"
 
     # Download the genbootanim.sh script using curl
-    curl -sSL https://github.com/rhythmcache/Video-to-BootAnimation-Creator-Script/releases/download/V1/genbootanim.sh -o genbootanim.sh
-
-    # Make the script executable
-    chmod +x genbootanim.sh
-
-    # Run the downloaded script
-    ./genbootanim.sh
-
-    # After the script runs, remove the genbootanim.sh script
-    rm -f genbootanim.sh  # Clean up by deleting the downloaded script
-
-    # Exit the main script
-    exit 0
+    curl -sSL https://raw.githubusercontent.com/rhythmcache/Video-to-BootAnimation-Creator-Script/main/cbootanim.sh -o cbootanim.sh
+    chmod +x cbootanim.sh
+    ./cbootanim.sh
 }
 
 # Picture in Picture Mode
