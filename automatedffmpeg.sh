@@ -1,8 +1,7 @@
 #!/bin/bash
 
 # https://github.com/rhythmcache
-# arch124.t.me
-# t.me/e1phn
+# rhythmcache.t.me
 # t.me/ximistuffs
 
 # Function to install a package
